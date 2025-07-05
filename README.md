@@ -1,6 +1,6 @@
 ![uhcx icon](assets/static/uhcx.png)
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776BF?logo=python&logoColor=white)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776BF?logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-A31F34?logo=opensourceinitiative&logoColor=white)](./LICENSE)
 [![Repo Size](https://img.shields.io/github/repo-size/hafiznurrahman/unkeyed-header-cache-xploit?color=008000&logo=github&logoColor=white)](https://github.com/hafiznurrahman/unkeyed-header-cache-xploit)
 [![Email](https://img.shields.io/badge/Email-ProtonMail-6D4AFF?logo=protonmail&logoColor=white)](mailto:zexxondominatez@proton.me)
@@ -8,8 +8,6 @@
 ![BTC](https://img.shields.io/badge/BTC-Donate-E28000?logo=bitcoin&logoColor=white)
 
 **Unkeyed Header Cache Xploit (UHCX)** is an open-source tool designed to identify and exploit **Unkeyed Header Cache** vulnerabilities. It automates the process of initial cacheability checks, relevant URL crawling, and payload execution to validate potential exploitations. Built with `asyncio` for efficiency and concurrency.
-
----
 
 ## Installation
 
@@ -25,8 +23,6 @@ To install UHCX, follow these steps:
     pip install -r requirements.txt
     ```
 
----
-
 ## Usage
 
 1.  **Configuration**: Adjust `config/settings.yaml` _(Optional)_
@@ -36,21 +32,15 @@ To install UHCX, follow these steps:
     python3 main.py
     ```
 
----
-
 ## License
 
 This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
-
----
 
 ## Contact & Donations
 
 -   **Email**: [zexxondominatez@proton.me](mailto:zexxondominatez@proton.me)
 -   **PayPal**: [Support via PayPal](https://www.paypal.me/HafizNurRahman12)
 -   **BTC**: `bc1qduehnerm0mfe89ed0jvy3ww6nske2rzajhtlvv`
-
----
 
 ## Disclaimer
 
