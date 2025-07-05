@@ -205,3 +205,32 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ==========================================
+# 📦 .gitignore for UHCX project
+# ==========================================
+
+# Log files
+data/logs/*
+!data/logs/
+!data/logs/.gitkeep
+
+# Crawling results metadata and cache check
+data/meta/*
+!data/meta/
+!data/meta/.gitkeep
+
+# Payload testing results
+data/results/*
+!data/results/
+!data/results/.gitkeep
+
+# Ensure that the tests directory remains tracked
+!test/
+!test/**
+
+# Do not track backup/temporary files
+*.bak
+*.tmp
+*~
+
