@@ -1,0 +1,11 @@
+rich
+lxml
+pytz
+PyYAML
+pytest
+aiohttp
+aiofiles
+python-slugify
+python-dateutil
+pytest-asyncio
+beautifulsoup4

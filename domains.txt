@@ -1,0 +1,19 @@
+# ================================================
+# File: domains.txt
+# Description:
+# - List of domains or target URLs to be processed.
+# - Each line contains only one entry: domain or URL.
+# - URLs may begin with `http://` or `https://`.
+# - The `#` symbol marks a comment: text after `#` will be ignored.
+# - Blank lines will be ignored.
+# Valid examples:
+#
+#   example.com
+#   https://example.com
+#   http://sub.example.com     # internal server
+#
+# ================================================
+
+# Add domains below
+
+029b91f8.poison.digi.ninja:2443
