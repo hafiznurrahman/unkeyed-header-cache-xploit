@@ -15,7 +15,7 @@ To install UHCX, follow these steps:
 
 1.  **Clone the repository:**
     ```bash
-    git clone git@github.com:hafiznurrahman/unkeyed-header-cache-xploit.git
+    git clone https://github.com/hafiznurrahman/unkeyed-header-cache-xploit.git
     cd unkeyed-header-cache-xploit
     ```
 2.  **Install dependencies:**
