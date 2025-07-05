@@ -1,7 +1,7 @@
 # Unkeyed Header Cache Xploit
 
 <p align="center">
-    <a href="https://github.com/hafiznurrahman/unkeyed-header-cache-xploit"><img src="assets/static/uhcx_icon.png" alt="uhcx icon" height="120"></a>
+    <a href="https://github.com/hafiznurrahman/unkeyed-header-cache-xploit"><img src="assets/static/uhcx_icon.png" alt="uhcx icon" width="25%"></a>
     <br/>
     <strong>UHCX - Exploiting Cache Poisoning Vulnerabilities</strong>
     <p align="center">
