@@ -6,6 +6,12 @@
 # - URLs may begin with `http://` or `https://`.
 # - The `#` symbol marks a comment: text after `#` will be ignored.
 # - Blank lines will be ignored.
+#
+# To test locally or during development:
+# 1. Copy this file: `cp domains.txt domains.txt.local`
+# 2. Add your test domains to `domains.txt.local`.
+# 3. Ensure your `settings.yaml` file is configured to read from `domains.txt.local`.
+#
 # Valid examples:
 #
 #   example.com
@@ -14,6 +20,5 @@
 #
 # ================================================
 
-# Add domains below
-
-
+# Add default/example domains below (if any, otherwise leave blank)
+# This section remains in the main repository's domains.txt

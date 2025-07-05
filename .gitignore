@@ -229,8 +229,10 @@ data/results/*
 !test/
 !test/**
 
+# Ignore local domain list specific to a developer's testing
+domains.txt.local
+
 # Do not track backup/temporary files
 *.bak
 *.tmp
 *~
-
