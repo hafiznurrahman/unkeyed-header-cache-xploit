@@ -7,9 +7,9 @@
 [![PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.me/HafizNurRahman12)
 ![BTC](https://img.shields.io/badge/BTC-Donate-E28000?logo=bitcoin&logoColor=white)
 
-**Unkeyed Header Cache Xploit (UHCX)** is an open-source tool designed to identify and exploit **Unkeyed Header Cache** vulnerabilities. It automates the process of initial cacheability checks, relevant URL crawling, and payload execution to validate potential exploitations. Built with `asyncio` for efficiency and concurrency.
+**Unkeyed Header Cache Xploit (UHCX)** is an open-source tool designed to identify and exploit **cache poisoning vulnerabilities**. The tool automates the entire workflow from domain cache checking, relevant URL crawling, to payload injection and vulnerability validation. Built using `asyncio`, it can be used for large-scale testing. 🚀
 
-## Installation
+## Installation 🛠️
 
 To install UHCX, follow these steps:
 
@@ -23,25 +23,25 @@ To install UHCX, follow these steps:
     pip install -r requirements.txt
     ```
 
-## Usage
+## Usage 🧑‍💻
 
-1.  **Configuration**: Adjust `config/settings.yaml` _(Optional)_
-2.  **Domain List**: Add your target domains to `domains.txt`.
+1.  **Configuration**: Adjust `config/settings.yaml` (Optional) ⚙️
+2.  **Domain List**: Add your target domains to `domains.txt`. 🎯
 3.  **Run the Tool**:
     ```bash
     python3 main.py
     ```
 
-## License
+## License 📜
 
 This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
 
-## Contact & Donations
+## Contact & Donations ❤️
 
--   **Email**: [zexxondominatez@proton.me](mailto:zexxondominatez@proton.me)
+-   **Email**: [Contact us](mailto:zexxondominatez@proton.me)
 -   **PayPal**: [Support via PayPal](https://www.paypal.me/HafizNurRahman12)
 -   **BTC**: `bc1qduehnerm0mfe89ed0jvy3ww6nske2rzajhtlvv`
 
-## Disclaimer
+## Disclaimer ⚠️
 
-> This tool is intended for educational and authorized security testing purposes only. Misuse of this tool may violate laws or terms of service. The developer is not responsible for any misuse or damage caused.
+> This tool is intended for educational and permitted security testing purposes only. Improper use of this tool may violate laws or terms and conditions of service. The developer is not responsible for improper use or damage caused.
