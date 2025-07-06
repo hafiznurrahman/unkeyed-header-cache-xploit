@@ -1,31 +1,52 @@
 ### utils/config_manager.py ###
-from helpers import load_yaml
+import os
+from typing import Any, Dict
+from asyncio import Lock as AsyncLock
+from utils.helpers import load_yaml
 
-class ConfigManager:
-    def __init__(self, config_file_path):
-        self.config_file_path = config_file_path
-        self.config = None
 
-    async def load_config(self):
+class AsyncConfigManager:
+    _instances: Dict[str, "AsyncConfigManager"] = {}
+    _locks: Dict[str, AsyncLock] = {}
+
+    def __new__(cls, *args, **kwargs):
+        raise RuntimeError("Use `await AsyncConfigManager.get_instance(path)` instead")
+
+    @classmethod
+    async def get_instance(cls, config_path: str):
+        abs_path = os.path.abspath(config_path)
+
+        # Buat lock khusus untuk setiap file config
+        if abs_path not in cls._locks:
+            cls._locks[abs_path] = AsyncLock()
+
+        async with cls._locks[abs_path]:
+            if abs_path not in cls._instances:
+                self = super().__new__(cls)
+                await self._init(abs_path)
+                cls._instances[abs_path] = self
+            return cls._instances[abs_path]
+
+    async def _init(self, config_path: str):
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+        self._path = config_path
+        self._config = await load_yaml(config_path)
+
+    def get(self, *keys: str, default: Any = None) -> Any:
+        value = self._config
         try:
-            self.config = await load_yaml(self.config_file_path)
-        except Exception as e:
-            print(f"Gagal memuat konfigurasi: {e}")
+            for key in keys:
+                value = value[key]
+            return value
+        except (KeyError, TypeError):
+            return default
 
-    def get_config(self):
-        return self.config
+    def get_section(self, section: str) -> dict:
+        return self._config.get(section, {})
 
-    def get_global_config(self):
-        return self.config.get('global_config', {})
+    def as_dict(self) -> dict:
+        return self._config
 
-    def get_http_request_config(self):
-        return self.config.get('http-request_config', {})
-
-    def get_domain_check_config(self):
-        return self.config.get('domain-check_config', {})
-
-    def get_crawler_config(self):
-        return self.config.get('crawler_config', {})
-
-    def get_executor_config(self):
-        return self.config.get('executor_config', {})
+    def path(self) -> str:
+        return self._path

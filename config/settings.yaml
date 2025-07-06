@@ -1,22 +1,31 @@
+### config/settings.yaml ###
 global_config:
-    concurrent: 20
+    concurrent: 50
     domain_list_file_path: "domains.txt"
     log_file_directory_path: "data/logs"
     indexed_url_file_path: "data/meta/urls_crawled.json"
     cacheable_url_file_path: "data/meta/urls_cacheable.json"
     target_result_directory_path: "data/results"
 
-http-request_config:
-    use_cb_param: False
-    get_headers: True
-    get_body: False
+http-client_config:
+    allow_redirects: True
+    connector_limit: 100
+    timeout: 10
+    user_agent:
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    dns_nameservers:
+        - "1.1.1.1"
+        - "8.8.8.8"
+        - "9.9.9.9"
 
 domain-check_config:
-    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0 UHCX-Scanning/0.1"
+    user_agent:
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0 UHCX-Scanning/0.1"
     allow_redirects: True
 
 crawler_config:
-    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/0.1"
+    user_agent:
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/0.1"
     max_retries: 3
     max_deep: 3
     same_domain: True
@@ -24,4 +33,5 @@ crawler_config:
     get_static_files: False
 
 executor_config:
-    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81 UHCX-Executor/0.1"
+    user_agent:
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81 UHCX-Executor/0.1"

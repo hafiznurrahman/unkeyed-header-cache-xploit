@@ -9,23 +9,28 @@ from utils.console import console
 class HTTPClient:
     logger = get_logging()
 
-    def __init__(self, headers: dict = None, follow_redirects: bool = False, timeout: int = 10):
+    def __init__(
+        self,
+        headers: dict = None,
+        follow_redirects: bool = False,
+        timeout: int = 10,
+        limit: int = 100,
+        nameservers: list[str] = None,
+    ):
         self.headers = headers or {}
         self.follow_redirects = follow_redirects
         self.timeout = aiohttp.ClientTimeout(total=timeout)
+        self.limit = limit
+        self.nameservers = nameservers or ["1.1.1.1", "8.8.8.8", "9.9.9.9"]
         self._session = None
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
-            connector = aiohttp.TCPConnector(
-                limit=100
-            )
-            
             # Use AsyncResolver with a public DNS server to improve DNS resolution reliability
             # and bypass issues with unresponsive local system DNS resolvers.
-            resolver = AsyncResolver(nameservers=["1.1.1.1", "8.8.8.8", "9.9.9.9"])
+            resolver = AsyncResolver(nameservers=self.nameservers)
             connector = TCPConnector(
-                limit=100,
+                limit=self.limit,
                 resolver=resolver
             )
         
