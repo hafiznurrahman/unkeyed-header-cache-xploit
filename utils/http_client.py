@@ -1,5 +1,7 @@
 ### utils/http_client.py ###
 import aiohttp
+from aiohttp.resolver import AsyncResolver
+from aiohttp import TCPConnector
 from .logger import get_logging
 from .cache_buster import cache_buster
 from utils.console import console
@@ -15,10 +17,22 @@ class HTTPClient:
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
-            connector = aiohttp.TCPConnector(limit=100)
+            connector = aiohttp.TCPConnector(
+                limit=100
+            )
+            
+            # Use AsyncResolver with a public DNS server to improve DNS resolution reliability
+            # and bypass issues with unresponsive local system DNS resolvers.
+            resolver = AsyncResolver(nameservers=["1.1.1.1", "8.8.8.8", "9.9.9.9"])
+            connector = TCPConnector(
+                limit=100,
+                resolver=resolver
+            )
+        
             self._session = aiohttp.ClientSession(
                 headers=self.headers,
                 timeout=self.timeout,
+                connector=connector
             )
         return self._session
 
@@ -35,13 +49,6 @@ class HTTPClient:
         
         if not url.startswith(('http://','https://')):
             url = f"https://{url}"
-        
-        #if use_cache_buster:
-            #bust_param = cache_buster()
-            #url_with_buster = f"{url}?{bust_param}" if "?" not in url else f"{url}&{bust_param}"
-        #else:
-            #url_with_buster = url
-            
         if use_cache_buster:
             bust = cache_buster()
             url += ("&" if "?" in url else "?") + bust
