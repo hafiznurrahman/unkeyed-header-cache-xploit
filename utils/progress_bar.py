@@ -10,7 +10,7 @@ from rich.progress import (
 )
 from utils.console import console
 
-def get_progress() -> Progress:
+def get_progress_default() -> Progress:
     return Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -22,3 +22,14 @@ def get_progress() -> Progress:
         console=console,
         transient=True 
     )
+
+def get_progress_dynamic() -> Progress:
+    return Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        TextColumn("[bold blue]{task.completed}[/bold blue] items processed"),
+        TimeElapsedColumn(),
+        console=console,
+        transient=True
+    )
+    

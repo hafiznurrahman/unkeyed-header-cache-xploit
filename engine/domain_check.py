@@ -1,12 +1,12 @@
+### engine/domain_check.py ###
 import os
 import aiofiles
 import asyncio
 from utils.logger import get_logging
 from utils.helpers import save_json
 from utils.http_client import HTTPClient
-from utils.progress_bar import get_progress
+from utils.progress_bar import get_progress_default
 from engine.cacheable import is_cacheable
-from utils.config_manager import AsyncConfigManager
 
 logger = get_logging()
 
@@ -38,8 +38,7 @@ async def safe_is_cacheable(domain: str, client: HTTPClient, progress, task_id, 
     finally:
         progress.advance(task_id)
 
-async def domain_check(http_client: HTTPClient) -> list[str]:
-    config = await AsyncConfigManager.get_instance("config/settings.yaml")
+async def domain_check(http_client: HTTPClient, config: dict) -> list[str]:
     global_config = config.get("global_config", default={})
     domain_check_config = config.get("domain-check_config", default={})
     
@@ -58,7 +57,7 @@ async def domain_check(http_client: HTTPClient) -> list[str]:
 
     logger.info(f"Checking {len(domains)} domains..")
     
-    progress = get_progress()
+    progress = get_progress_default()
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
 
     cacheable_base_urls = []
