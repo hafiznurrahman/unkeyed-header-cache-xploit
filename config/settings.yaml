@@ -1,6 +1,7 @@
 ### config/settings.yaml ###
 global_config:
     concurrent: 50
+    cache_buster_name: "uhcxispoisoning"
     domain_list_file_path: "domains.txt"
     log_file_directory_path: "data/logs"
     indexed_url_file_path: "data/meta/urls_crawled.json"
