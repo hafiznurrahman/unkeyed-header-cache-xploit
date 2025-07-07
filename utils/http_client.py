@@ -3,7 +3,7 @@ import aiohttp
 from aiohttp.resolver import AsyncResolver
 from aiohttp import TCPConnector
 from .logger import get_logging
-from .cache_buster import cache_buster
+from .cache_buster import cache_buster_value
 from utils.console import console
 
 class HTTPClient:
@@ -16,12 +16,14 @@ class HTTPClient:
         timeout: int = 10,
         limit: int = 100,
         nameservers: list[str] = None,
+        cache_buster_name: str = "uhcxispoisoning"
     ):
         self.headers = headers or {}
         self.follow_redirects = follow_redirects
         self.timeout = aiohttp.ClientTimeout(total=timeout)
         self.limit = limit
         self.nameservers = nameservers or ["1.1.1.1", "8.8.8.8", "9.9.9.9"]
+        self.cache_buster_name = cache_buster_name
         self._session = None
 
     async def _get_session(self) -> aiohttp.ClientSession:
@@ -55,8 +57,9 @@ class HTTPClient:
         if not url.startswith(('http://','https://')):
             url = f"https://{url}"
         if use_cache_buster:
-            bust = cache_buster()
-            url += ("&" if "?" in url else "?") + bust
+            buster_value = cache_buster_value()
+            cache_buster_final = f"{self.cache_buster_name}={buster_value}"
+            url += ("&" if "?" in url else "?") + cache_buster_final
 
         request_headers = self.headers.copy()
         if headers:
