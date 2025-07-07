@@ -22,13 +22,15 @@ async def main():
     initial_timeout = http_client_config.get("timeout", 10)
     initial_user_agent = http_client_config.get("user_agent", {})
     initial_dns_nameservers = http_client_config.get("dns_nameservers", [])
+    initial_cache_buster_name = http_client_config.get("cache_buster_name", "uhcxispoisoning")
     
     global_http_client = HTTPClient(
         headers=initial_user_agent,
         follow_redirects=initial_allow_redirect,
         timeout=initial_timeout,
         limit=initial_connector_limit,
-        nameservers=initial_dns_nameservers
+        nameservers=initial_dns_nameservers,
+        cache_buster_name=initial_cache_buster_name
     )
     
     try:
