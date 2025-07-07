@@ -2,13 +2,14 @@
 import sys
 import asyncio
 from utils.console import console
+from utils.helpers import load_json
 from utils.logger import get_logging
 from utils.uhcx_icon import uhcx_icon
 from utils.helpers import clear_terminal
 from utils.http_client import HTTPClient
 from utils.config_manager import AsyncConfigManager
 from engine.domain_check import domain_check
-#from engine.crawler import crawler
+from engine.crawler import crawler
 #from engine.executor import executor
 
 logger = get_logging()
@@ -41,14 +42,14 @@ async def main():
         
         # --- Tahap 1: Cek Cacheability Domain Awal ---
         console.print("[bold red][+] Checking Domains...  [/]\n")
-        cacheable_base_urls = await domain_check(global_http_client)
+        cacheable_base_urls = await domain_check(global_http_client, config)
         
         # --- Tahap 2: Crawling URL dari Domain yang Cacheable ---
         if len(cacheable_base_urls):
             console.print("\n[bold red][+] Crawling Domains...  [/]\n")
-            logger.info(f"Crawling {len(cacheable_base_urls)} Domains...")
-        
-        # --- Tahap 3: Eksekusi URL dari hasil crawling ---
+            urls_crawled = await crawler(global_http_client, cacheable_base_urls, config)
+            
+        # --- Tahap 3: Eksekusi URL dari hasil crawling ---.
         console.print("\n[bold red][+] Exploiting URLs...  [/]\n")
         
     except asyncio.CancelledError:
