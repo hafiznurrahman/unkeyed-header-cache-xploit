@@ -8,6 +8,7 @@ from datetime import datetime
 from dateutil import parser
 from urllib.parse import urlparse, urlunparse
 from utils.console import console
+from utils.helpers import decode_double_encoding
 
 logger = get_logging()
 
@@ -134,12 +135,6 @@ async def calculate_cacheability_score(response_headers: dict) -> tuple[int, lis
 
     return points, reasons
 
-
-def get_base_domain_from_url(url: str) -> str:
-
-    parsed_url = urlparse(url)
-    return urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', '', ''))
-
 async def is_cacheable(url: str, client: HTTPClient, headers: dict, allow_redirect: bool) -> str | None:
 
     try:
@@ -157,8 +152,7 @@ async def is_cacheable(url: str, client: HTTPClient, headers: dict, allow_redire
         # Menggunakan fungsi terpisah untuk menghitung skor
         total_points, reasons = await calculate_cacheability_score(response_headers)
         
-        # Ekstrak domain dasar tanpa parameter
-        base_url = get_base_domain_from_url(result['url'])
+        base_url = decode_double_encoding(result['url'])
         
         # Logging hasil penilaian untuk debugging
         logger.debug(f"URL: {base_url}, Total Points: {total_points}, Reasons: {reasons}")
@@ -167,10 +161,10 @@ async def is_cacheable(url: str, client: HTTPClient, headers: dict, allow_redire
         CACHEABLE_THRESHOLD = 2 
 
         if total_points >= CACHEABLE_THRESHOLD:
-            logger.info(f"{base_url} -> [bold yellow]CACHEABLE[/] - SCORE: {total_points}")
+            logger.info(f"[blue]{base_url}[/] -> [bold yellow]CACHEABLE[/] - SCORE: {total_points}")
             return base_url
         else:
-            logger.info(f"{base_url} -> NOT CACHEABLE - SCORE: {total_points}")
+            logger.info(f"[blue]{base_url}[/] -> NOT CACHEABLE - SCORE: {total_points}")
             return None
 
     except asyncio.TimeoutError:
