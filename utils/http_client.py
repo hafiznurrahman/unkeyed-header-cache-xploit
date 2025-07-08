@@ -1,5 +1,6 @@
 ### utils/http_client.py ###
 import aiohttp
+import urllib.parse
 from aiohttp.resolver import AsyncResolver
 from aiohttp import TCPConnector
 from .logger import get_logging
@@ -56,10 +57,15 @@ class HTTPClient:
         
         if not url.startswith(('http://','https://')):
             url = f"https://{url}"
+            
         if use_cache_buster:
             buster_value = cache_buster_value()
-            cache_buster_final = f"{self.cache_buster_name}={buster_value}"
-            url += ("&" if "?" in url else "?") + cache_buster_final
+            params = {self.cache_buster_name: buster_value}
+            url_parts = list(urllib.parse.urlparse(url))
+            query = dict(urllib.parse.parse_qsl(url_parts[4]))
+            query.update(params)
+            url_parts[4] = urllib.parse.urlencode(query)
+            url = urllib.parse.urlunparse(url_parts)
 
         request_headers = self.headers.copy()
         if headers:
