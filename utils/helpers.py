@@ -33,11 +33,20 @@ async def save_yaml(path: str, data: dict):
     async with aiofiles.open(path, 'w', encoding='utf-8') as f:
         await f.write(yaml_str)
 
-def decode_double_encoding(encoded_str):
-    decoded_str = encoded_str
+def decode_double_encoding(url: str) -> str:
+    decoded_path = url
     while True:
-        prev_str = decoded_str
-        decoded_str = urllib.parse.unquote(decoded_str)
-        if prev_str == decoded_str:
+        prev_str = decoded_path
+        decoded_path = urllib.parse.unquote(decoded_path)
+        if prev_str == decoded_path:
             break
-    return decoded_str
+    return decoded_path
+
+def without_param_fragment(url: str):
+    parsed_url = urllib.parse.urlparse(url)
+    return urllib.parse.urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', '', ''))
+    
+def without_fragment(url: str):
+    parsed_url = urllib.parse.urlparse(url)
+    return urllib.parse.urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, parsed_url.query, parsed_url.params, ''))
+    
