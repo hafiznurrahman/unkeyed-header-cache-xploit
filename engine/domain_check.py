@@ -2,6 +2,7 @@
 import os
 import aiofiles
 import asyncio
+from utils.helpers import without_param_fragment
 from utils.logger import get_logging
 from utils.helpers import save_json
 from utils.http_client import HTTPClient
@@ -13,7 +14,7 @@ logger = get_logging()
 async def read_domains(file_path: str) -> list[str]:
     domains = []
     if not os.path.exists(file_path):
-        logger.error(f"File not found: {file_path}")
+        logger.info(f"File not found: {file_path}")
         async with aiofiles.open(file_path, mode='w') as f:
             await f.write('# Add domains below\n')
         return []
@@ -43,7 +44,7 @@ async def domain_check(http_client: HTTPClient, config: dict) -> list[str]:
     domain_check_config = config.get("domain-check_config", default={})
     
     
-    CONCURRENT_REQUESTS = global_config.get("concurrent", 20)
+    CONCURRENT_REQUESTS = global_config.get("concurrent", 50)
     domain_path = global_config.get("domain_list_file_path", "domains.txt")
     output_file = global_config.get("cacheable_url_file_path", "data/meta/urls_cacheable.json")
     
@@ -70,7 +71,7 @@ async def domain_check(http_client: HTTPClient, config: dict) -> list[str]:
             for future in asyncio.as_completed(tasks):
                 result = await future
                 if result:
-                    cacheable_base_urls.append(result)
+                    cacheable_base_urls.append(without_param_fragment(result))
                 else:
                     errors_count += 1
     except Exception as e:
