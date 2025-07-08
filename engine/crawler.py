@@ -7,6 +7,7 @@ from utils.http_client import HTTPClient
 from utils.logger import get_logging
 from utils.helpers import save_json
 from utils.progress_bar import get_progress_dynamic
+from utils.helpers import decode_double_encoding
 
 logger = get_logging()
 
@@ -27,7 +28,8 @@ def is_static(url: str) -> bool:
 def normalize_url(base: str, raw: str) -> str | None:
     try:
         absolute = urljoin(base, raw)
-        parsed = urlparse(absolute)
+        decoded = decode_double_encoding(absolute)
+        parsed = urlparse(decoded)
         
         clean_url = parsed._replace(fragment="").geturl()
         if not absolute.startswith(("http://", "https://")):

@@ -2,6 +2,7 @@ import os
 import json
 import yaml
 import aiofiles
+import urllib.parse
 from slugify import slugify
 
 def clear_terminal():
@@ -31,3 +32,12 @@ async def save_yaml(path: str, data: dict):
     yaml_str = yaml.dump(data, allow_unicode=True)
     async with aiofiles.open(path, 'w', encoding='utf-8') as f:
         await f.write(yaml_str)
+
+def decode_double_encoding(encoded_str):
+    decoded_str = encoded_str
+    while True:
+        prev_str = decoded_str
+        decoded_str = urllib.parse.unquote(decoded_str)
+        if prev_str == decoded_str:
+            break
+    return decoded_str
