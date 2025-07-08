@@ -1,6 +1,6 @@
 ### config/settings.yaml ###
 global_config:
-    concurrent: 50
+    concurrent: 100
     cache_buster_name: "uhcxispoisoning"
     domain_list_file_path: "domains.txt"
     log_file_directory_path: "data/logs"
@@ -30,7 +30,7 @@ crawler_config:
     max_retries: 3
     max_deep: 3
     same_domain: True
-    allow_redirects: False
+    allow_redirects: True
     get_static_files: False
 
 executor_config:
