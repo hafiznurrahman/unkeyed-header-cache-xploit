@@ -8,6 +8,7 @@ from utils.logger import get_logging
 from utils.helpers import save_json
 from utils.progress_bar import get_progress_dynamic
 from utils.helpers import decode_double_encoding
+from utils.file_writer import URLWriter
 
 logger = get_logging()
 
@@ -71,7 +72,8 @@ async def crawl_url(
     queue: asyncio.Queue,
     progress,
     task_id: int,
-    current_depth: int
+    current_depth: int,
+    url_writer
 ):
     async with semaphore:
         crawler_conf = config.get("crawler_config", default={})
@@ -99,8 +101,9 @@ async def crawl_url(
             if current_depth < max_deep:
                 for link in new_links:
                     await queue.put((link, current_depth + 1))
-
-            logger.info(f"[Depth {current_depth}] {url} → {len(links)} links")
+                    await url_writer.add(link)
+                
+            logger.info(f"[Depth {current_depth}] [blue]{url}[/] → {len(links)} links")
         except Exception as e:
             logger.warning(f"Failed to crawl {url}: {e}")
         finally:
@@ -110,7 +113,7 @@ async def crawler(http_client: HTTPClient, start_urls: list, config: dict) -> li
     global_conf = config.get("global_config", default={})
     crawler_conf = config.get("crawler_config", default={})
     
-    max_concurrent = global_conf.get("concurrent", 20)
+    max_concurrent = global_conf.get("concurrent", 50)
     output_file = global_conf.get("indexed_url_file_path", "data/meta/urls_crawled.json")
     max_deep = crawler_conf.get("max_deep", 1)
 
@@ -125,17 +128,18 @@ async def crawler(http_client: HTTPClient, start_urls: list, config: dict) -> li
     logger.info(f"Started deep crawling on {len(start_urls)} domains, max depth {max_deep}...")
 
     with progress:
-        task_id = progress.add_task("[yellow]Crawling...")
+        task_id = progress.add_task("[yellow]Crawling...", total=None)
 
         workers = []
-
+        url_writer = URLWriter(output_file)
+        
         async def worker():
             while True:
                 try:
                     url, depth = await queue.get()
                 except asyncio.CancelledError:
                     break
-                await crawl_url(semaphore, http_client, url, config, seen_urls, queue, progress, task_id, depth)
+                await crawl_url(semaphore, http_client, url, config, seen_urls, queue, progress, task_id, depth, url_writer)
                 queue.task_done()
 
         for _ in range(max_concurrent):
