@@ -10,12 +10,13 @@ from utils.http_client import HTTPClient
 from utils.config_manager import AsyncConfigManager
 from engine.domain_check import domain_check
 from engine.crawler import crawler
-#from engine.executor import executor
+from engine.executor import executor
 
 logger = get_logging()
 
 async def main():
     config = await AsyncConfigManager.get_instance("config/settings.yaml")
+    config_payloads = await AsyncConfigManager.get_instance("config/payloads.yaml")
     http_client_config = config.get("http-client_config", default={})
     
     initial_allow_redirect = http_client_config.get("allow_redirects", False)
@@ -45,14 +46,17 @@ async def main():
         cacheable_base_urls = await domain_check(global_http_client, config)
         
         # --- Tahap 2: Crawling URL dari Domain yang Cacheable ---
-        if len(cacheable_base_urls):
+        if cacheable_base_urls:
             console.print("\n[bold red][+] Crawling Domains...  [/]\n")
             urls_crawled = await crawler(global_http_client, cacheable_base_urls, config)
             
         # --- Tahap 3: Eksekusi URL dari hasil crawling ---.
-        console.print("\n[bold red][+] Exploiting URLs...  [/]\n")
+            if urls_crawled:
+                console.print("\n[bold red][+] Exploiting URLs...  [/]\n")
+                finish_exec = await executor(global_http_client, urls_crawled, config, config_payloads)
         
     except asyncio.CancelledError:
+        print() # new line
         logger.warning("Program terminated by user (CTRL + C).")
         raise
     except Exception as e:
