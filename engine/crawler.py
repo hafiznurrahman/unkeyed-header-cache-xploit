@@ -5,10 +5,10 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 from utils.http_client import HTTPClient
 from utils.logger import get_logging
-from utils.helpers import save_json
 from utils.progress_bar import get_progress_dynamic
 from utils.helpers import decode_double_encoding
 from utils.file_writer import URLWriter
+from utils.read_line_by_line import read_line_by_line
 
 logger = get_logging()
 
@@ -39,8 +39,18 @@ def normalize_url(base: str, raw: str) -> str | None:
     except:
         return None
 
-async def extract_links(base_url: str, html: str, same_domain: bool, get_static_files: bool) -> set:
-    soup = BeautifulSoup(html, "lxml")
+async def extract_links(
+    base_url: str,
+    html: str,
+    same_domain: bool,
+    get_static_files: bool,
+    content_type: str
+) -> set:
+    if "xml" in content_type:
+        soup = BeautifulSoup(html, "lxml-lxml")
+    else:
+        soup = BeautifulSoup(html, "lxml")
+        
     links = set()
 
     for tag in soup.find_all(["a", "link", "script", "img"]):
@@ -67,8 +77,7 @@ async def crawl_url(
     semaphore: asyncio.Semaphore,
     http_client: HTTPClient,
     url: str,
-    config: dict,
-    seen_urls: set,
+    crawler_conf: dict,
     queue: asyncio.Queue,
     progress,
     task_id: int,
@@ -76,8 +85,7 @@ async def crawl_url(
     url_writer
 ):
     async with semaphore:
-        crawler_conf = config.get("crawler_config", default={})
-        user_agent = crawler_conf.get("user_agent", {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/0.1"})
+        user_agent = crawler_conf.get("user_agent", {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/1.0"})
         allow_redirects = crawler_conf.get("allow_redirects", False)
         same_domain = crawler_conf.get("same_domain", True)
         get_static_files = crawler_conf.get("get_static_files", False)
@@ -89,14 +97,15 @@ async def crawl_url(
                 headers=user_agent,
                 follow_redirects=allow_redirects,
                 return_content=True,
-                return_headers=False,
+                return_headers=True,
                 use_cache_buster=False
             )
             html = response.get("content", "")
-            links = await extract_links(url, html, same_domain, get_static_files)
+            content_type = response.get("headers", {}).get("content-type")
+            
+            links = await extract_links(url, html, same_domain, get_static_files, content_type)
 
-            new_links = links - seen_urls
-            seen_urls.update(new_links)
+            new_links = links
 
             if current_depth < max_deep:
                 for link in new_links:
@@ -105,33 +114,34 @@ async def crawl_url(
                 
             logger.info(f"[Depth {current_depth}] [blue]{url}[/] → {len(links)} links")
         except Exception as e:
-            logger.warning(f"Failed to crawl {url}: {e}")
+            logger.error(f"Failed to crawl {url}: {e}")
         finally:
             progress.update(task_id, advance=1)
 
-async def crawler(http_client: HTTPClient, start_urls: list, config: dict) -> list:
-    global_conf = config.get("global_config", default={})
-    crawler_conf = config.get("crawler_config", default={})
-    
-    max_concurrent = global_conf.get("concurrent", 50)
-    output_file = global_conf.get("indexed_url_file_path", "data/meta/urls_crawled.json")
+async def crawler(
+    http_client: HTTPClient,
+    concurrent: int,
+    crawler_conf: dict,
+    input_file: str,
+    output_file: str
+):
     max_deep = crawler_conf.get("max_deep", 1)
-
-    semaphore = asyncio.Semaphore(max_concurrent)
+    semaphore = asyncio.Semaphore(concurrent)
     progress = get_progress_dynamic()
     queue = asyncio.Queue()
-    seen_urls = set(start_urls)
-
+    url_writer = URLWriter(output_file)
+    
+    start_urls = await read_line_by_line(input_file)
     for url in start_urls:
         await queue.put((url, 1))
+        await url_writer.add(url)
 
-    logger.info(f"Started deep crawling on {len(start_urls)} domains, max depth {max_deep}...")
+    logger.info(f"Started deep crawling on {len(start_urls)} domains, max depth {max_deep}")
 
     with progress:
         task_id = progress.add_task("[yellow]Crawling...", total=None)
 
         workers = []
-        url_writer = URLWriter(output_file)
         
         async def worker():
             while True:
@@ -139,10 +149,10 @@ async def crawler(http_client: HTTPClient, start_urls: list, config: dict) -> li
                     url, depth = await queue.get()
                 except asyncio.CancelledError:
                     break
-                await crawl_url(semaphore, http_client, url, config, seen_urls, queue, progress, task_id, depth, url_writer)
+                await crawl_url(semaphore, http_client, url, crawler_conf, queue, progress, task_id, depth, url_writer)
                 queue.task_done()
 
-        for _ in range(max_concurrent):
+        for _ in range(concurrent):
             workers.append(asyncio.create_task(worker()))
 
         await queue.join()
@@ -150,6 +160,6 @@ async def crawler(http_client: HTTPClient, start_urls: list, config: dict) -> li
             w.cancel()
         await asyncio.gather(*workers, return_exceptions=True)
 
-    logger.info(f"Total unique URLs crawled: {len(seen_urls)}")
-    await save_json(output_file, sorted(seen_urls))
-    return sorted(seen_urls)
+    logger.info(f"Crawling is complete, results saved to '{output_file}'")
+    
+    return url_writer.get_count() > 0

@@ -5,7 +5,6 @@ from aiohttp.resolver import AsyncResolver
 from aiohttp import TCPConnector
 from .logger import get_logging
 from .cache_buster import cache_buster_value
-from utils.console import console
 
 class HTTPClient:
     logger = get_logging()

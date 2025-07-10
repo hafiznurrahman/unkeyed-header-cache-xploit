@@ -215,15 +215,10 @@ data/logs/*
 !data/logs/
 !data/logs/.gitkeep
 
-# Crawling results metadata and cache check
-data/meta/*
-!data/meta/
-!data/meta/.gitkeep
-
 # Payload testing results
-data/results/*
-!data/results/
-!data/results/.gitkeep
+data/workflow/*
+!data/workflow/
+!data/workflow/.gitkeep
 
 # Ensure that the tests directory remains tracked
 !test/

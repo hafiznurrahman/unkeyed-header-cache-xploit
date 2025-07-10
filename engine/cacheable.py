@@ -7,7 +7,6 @@ from utils.logger import get_logging
 from datetime import datetime
 from dateutil import parser
 from urllib.parse import urlparse, urlunparse
-from utils.console import console
 from utils.helpers import decode_double_encoding
 
 logger = get_logging()
@@ -168,7 +167,7 @@ async def is_cacheable(url: str, client: HTTPClient, headers: dict, allow_redire
             return None
 
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout checking cacheability for '{url}'")
+        logger.error(f"Timeout checking cacheability for '{url}'")
         return None
     except Exception as e:
         logger.error(f"Error checking cacheable for '{url}': {e}")

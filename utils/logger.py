@@ -3,7 +3,7 @@ import os
 import logging
 from rich.logging import RichHandler
 from datetime import datetime
-from utils.console import console
+from utils.console import console_no_record
 
 def get_logging():
 
@@ -18,7 +18,7 @@ def get_logging():
         show_time=False,
         show_level=True,
         show_path=True, 
-        console=console,
+        console=console_no_record,
         markup=True,
         rich_tracebacks=True
     )

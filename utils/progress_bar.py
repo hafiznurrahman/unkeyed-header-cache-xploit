@@ -8,7 +8,7 @@ from rich.progress import (
     TimeRemainingColumn,
     TimeElapsedColumn,
 )
-from utils.console import console
+from utils.console import console_no_record
 
 def get_progress_default() -> Progress:
     return Progress(
@@ -19,7 +19,7 @@ def get_progress_default() -> Progress:
         TextColumn("[{task.completed}/{task.total}]"),
         TimeRemainingColumn(),
         TimeElapsedColumn(),
-        console=console,
+        console=console_no_record,
         transient=True 
     )
 
@@ -29,7 +29,7 @@ def get_progress_dynamic() -> Progress:
         TextColumn("[progress.description]{task.description}"),
         TextColumn("[bold blue]{task.completed}[/bold blue] items processed"),
         TimeElapsedColumn(),
-        console=console,
+        console=console_no_record,
         transient=True
     )
     

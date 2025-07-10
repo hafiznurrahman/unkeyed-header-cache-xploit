@@ -2,14 +2,15 @@
 global_config:
     concurrent: 100
     cache_buster_name: "uhcxispoisoning"
-    domain_list_file_path: "domains.txt"
     log_file_directory_path: "data/logs"
-    indexed_url_file_path: "data/meta/urls_crawled.json"
-    cacheable_url_file_path: "data/meta/urls_cacheable.json"
-    target_result_directory_path: "data/results"
+    domain_list_file_path: "domains.txt"
+    cacheable_domain_file_path: "data/workflow/phase_1_domains_cacheable.txt"
+    indexed_url_file_path: "data/workflow/phase_2_urls_crawled.txt"
+    cacheable_url_file_path: "data/workflow/phase_3_urls_cacheable.txt"
+    assessment_result_file_path: "data/workflow/phase_4_vulnerable_targets.txt"
 
 http-client_config:
-    allow_redirects: True
+    allow_redirects: False
     connector_limit: 100
     timeout: 10
     user_agent:
@@ -21,12 +22,12 @@ http-client_config:
 
 domain-check_config:
     user_agent:
-        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0 UHCX-Scanning/0.1"
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0 UHCX-Scanning/1.0"
     allow_redirects: True
 
 crawler_config:
     user_agent:
-        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/0.1"
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 UHCX-Crawler/1.0"
     max_retries: 3
     max_deep: 3
     same_domain: True
@@ -35,4 +36,8 @@ crawler_config:
 
 executor_config:
     user_agent:
-        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81 UHCX-Executor/0.1"
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81 UHCX-Executor/1.0"
+    your_domain: "uhcxispoisoning.com"
+    your_ip: "127.0.0.1"
+    port: 8080
+    marker: "uhcx123"
